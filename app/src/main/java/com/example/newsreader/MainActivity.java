@@ -3,19 +3,30 @@ package com.example.newsreader;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     static ArrayList<String> noted = new ArrayList<String>();
     static ArrayAdapter arrayAdapter;
     ListView listView ;
+    InputStream in, inputStream ;
+    InputStreamReader reader, inputStreamReader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +48,96 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        DownloadTask task = new DownloadTask();
+        task.execute("https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"); // api yang ingin di akses
 
 
     }
-}
+    public class DownloadTask extends AsyncTask<String, Void, String>
+    {
+
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String result ="";
+            URL url;
+            HttpURLConnection urlConnection = null;
+
+            try{
+
+                url = new URL(urls[0]);
+                urlConnection =(HttpURLConnection) url.openConnection();
+                 inputStream = urlConnection.getInputStream();
+                 inputStreamReader = new InputStreamReader(inputStream);
+                int data = inputStreamReader.read();
+
+                while (data != -1){
+
+                    char current = (char) data;
+                    result += current;
+                    data = inputStreamReader.read();
+                }
+//                JSONArray jsonArray = new JSONArray(result);
+//                int numberOfItems = 20;
+//
+//                if (jsonArray.length() < 20){
+//                    numberOfItems = jsonArray.length();
+//                }
+//
+//                for (int i =0; i < numberOfItems; i++){
+//                    String articleId = jsonArray.getString(i);
+//
+//                    url = new URL("https://hacker-news.firebaseio.com/v0/item/" + articleId + ".json?print=pretty" );
+//                    urlConnection = (HttpURLConnection) url.openConnection();
+//
+//                    inputStream = urlConnection.getInputStream();
+//                    inputStreamReader = new  InputStreamReader(inputStream);
+//
+//                    String articleInfo = " ";
+//
+//                    while (data != -1) {
+//                        char current = (char) data;
+//                        articleInfo += current;
+//                        data = inputStreamReader.read();
+//                    }
+//                    Log.i("articleInfo", result);
+//                }
+
+                Log.i("titlenya", result);
+                return result;
+
+            } catch (Exception e){
+
+                e.printStackTrace();
+                return "failed";
+            }
+
+        }
+
+//        protected void onPostExecute(String s){
+//            super.onPostExecute(s);
+//
+//            //  Log.i("JSON", s);
+//            try { // step 2
+//                JSONObject jsonObject = new JSONObject(s);
+//                String weatherInfo = jsonObject.getString("weather");
+//                Log.i("weather content", weatherInfo); // data yang diambil hanya weather dari API
+//
+//                JSONArray arr = new JSONArray(weatherInfo);
+//                for (int i=0; i < arr.length(); i++){
+//                    JSONObject jsonpart = arr.getJSONObject(i);
+//
+//                    Log.i("main",jsonpart.getString("main"));
+//                    Log.i("description",jsonpart.getString("description"));
+//                }
+//
+//
+//            }catch (Exception e){
+//
+//                e.printStackTrace();
+//            }
+//        }
+//    }//part one function atau apakah namanya ini pokoknya buat mengambil api dari web yang sudah menyediakan
+
+
+}}
