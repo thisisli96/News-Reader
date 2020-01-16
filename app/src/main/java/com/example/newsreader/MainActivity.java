@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     result += current;
                     data = inputStreamReader.read();
                 }
-
+// ini buat menampilkan data title dan url dan info info dari database
                 JSONArray jsonArray = new JSONArray(result);
                 int numberOfItems = 20;
 
@@ -101,8 +101,17 @@ public class MainActivity extends AppCompatActivity {
                         articleInfo += current;
                         data = inputStreamReader.read();
                     }
-                    Log.i("articleInfo", articleInfo);
+                   // Log.i("articleInfo", articleInfo); info dari articelInfo
+                    // mengambil khusus title dan url dari APi
+
+                    JSONObject jsonObject = new JSONObject(articleInfo);
+                    if (!jsonObject.isNull("title")&& !jsonObject.isNull("url")){
+                        String articleTitle = jsonObject.getString("title");
+                        String articleUrl = jsonObject.getString("url");
+                        Log.i("ini Title and URL ", articleTitle + articleUrl);
+                    }
                 }
+// sampai sini tambahan untuk menambilkan data info dari API.
 
                 Log.i("titlenya", result);
                 return result;
