@@ -77,31 +77,32 @@ public class MainActivity extends AppCompatActivity {
                     result += current;
                     data = inputStreamReader.read();
                 }
-//                JSONArray jsonArray = new JSONArray(result);
-//                int numberOfItems = 20;
-//
-//                if (jsonArray.length() < 20){
-//                    numberOfItems = jsonArray.length();
-//                }
-//
-//                for (int i =0; i < numberOfItems; i++){
-//                    String articleId = jsonArray.getString(i);
-//
-//                    url = new URL("https://hacker-news.firebaseio.com/v0/item/" + articleId + ".json?print=pretty" );
-//                    urlConnection = (HttpURLConnection) url.openConnection();
-//
-//                    inputStream = urlConnection.getInputStream();
-//                    inputStreamReader = new  InputStreamReader(inputStream);
-//
-//                    String articleInfo = " ";
-//
-//                    while (data != -1) {
-//                        char current = (char) data;
-//                        articleInfo += current;
-//                        data = inputStreamReader.read();
-//                    }
-//                    Log.i("articleInfo", result);
-//                }
+
+                JSONArray jsonArray = new JSONArray(result);
+                int numberOfItems = 20;
+
+                if (jsonArray.length() < 20){
+                    numberOfItems = jsonArray.length();
+                }
+
+                for (int i =0; i < numberOfItems; i++){
+                    String articleId = jsonArray.getString(i);
+
+                    url = new URL("https://hacker-news.firebaseio.com/v0/item/" + articleId + ".json?print=pretty" );
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    inputStream = urlConnection.getInputStream();
+                    inputStreamReader = new  InputStreamReader(inputStream);
+                    data = inputStreamReader.read();
+                    String articleInfo = " ";
+
+                    while (data != -1) {
+                        char current = (char) data;
+                        articleInfo += current;
+                        data = inputStreamReader.read();
+                    }
+                    Log.i("articleInfo", articleInfo);
+                }
 
                 Log.i("titlenya", result);
                 return result;
